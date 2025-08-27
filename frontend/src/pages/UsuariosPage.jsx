@@ -1,27 +1,59 @@
 import { useState, useEffect } from "react";
 import { UserPen, Trash2 } from "lucide-react";
 import axios from "axios";
+import Formulario from "../components/Formulario";
 
 function UsuariosPage() {
-  const [data, setData] = useState([]);
+  const [usuarios, setUsuarios] = useState([]);
+  const [open, setOpen] = useState(false);
+
+  const fetch = async () => {
+    try {
+      const res = await axios.get("http://localhost:5001/api/auth/users");
+      setUsuarios(res.data.usuarios);
+    } catch (error) {
+      console.log("Ocurrió un error al realizar el fetch: ", error);
+    }
+  };
 
   useEffect(() => {
-    const fetch = async () => {
-      try {
-        const res = await axios.get("http://localhost:5001/api/auth/users");
-        setData(res.data.usuarios);
-      } catch (error) {
-        console.log("Ocurrió un error al realizar el fetch");
-      }
-    };
-
     fetch();
   }, []);
 
-  console.log(data);
+  function handleForm(e) {
+    e.preventDefault();
+
+    setOpen(!open);
+  }
+
+  const handleDelete = async (e, id, rol) => {
+    e.preventDefault();
+    try {
+      if (rol === "A") {
+        window.alert("No puedes eliminar a otros administradores");
+        return;
+      }
+      if (window.confirm("¿Estas seguro de eliminar al usuario?")) {
+        const res = await axios.delete(
+          `http://localhost:5001/api/auth/delete-user?id=${id}`
+        );
+        await fetch();
+        console.log(res);
+      }
+    } catch (error) {
+      console.log("Ocurrio un error al eliminar el usuario: ", error);
+    }
+  };
 
   return (
-    <div className="text-black min-w-[calc(100vw-15rem)] bg-base-100 p-5 min-h-[calc(100vh-4rem)]">
+    <div className="relative text-black min-w-[calc(100vw-15rem)] bg-base-100 p-5 min-h-[calc(100vh-4rem)]">
+      <div
+        className={`${
+          open ? `flex` : `hidden`
+        } w-full h-full overflow-hidden  items-center justify-center inset-0 absolute z-10`}
+      >
+        <Formulario setOpen={setOpen} open={open} fetchUsuarios={fetch} />
+      </div>
       <div>
         <h1 className="font-bold text-4xl text-base-content">Usuarios</h1>
         <h3 className="text-sm text-base-content/40 mt-1">
@@ -29,7 +61,9 @@ function UsuariosPage() {
         </h3>
       </div>
       <div className="flex justify-end">
-        <span className=" btn btn-active">Agregar Usuario</span>
+        <span className=" btn btn-active" onClick={(e) => handleForm(e)}>
+          Agregar Usuario
+        </span>
       </div>
       <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 mt-5">
         <table className="table">
@@ -44,15 +78,18 @@ function UsuariosPage() {
             </tr>
           </thead>
           <tbody>
-            {data.map((usuario, index) => (
-              <tr key={index} className="text-base-content">
+            {usuarios.map((usuario, index) => (
+              <tr key={usuario.id} className="text-base-content">
                 <th>{index + 1}</th>
                 <td>{usuario?.nombre_completo}</td>
                 <td>{usuario?.email}</td>
                 <td>{usuario?.rol === "A" ? `Administrador` : `Contador`}</td>
                 <td className="flex flex-row gap-2">
                   <UserPen className="btn btn-info p-2.5 size-10" />
-                  <Trash2 className="btn btn-error p-2.5 size-10" />
+                  <Trash2
+                    onClick={(e) => handleDelete(e, usuario?.id, usuario?.rol)}
+                    className="btn btn-error p-2.5 size-10"
+                  />
                 </td>
               </tr>
             ))}
