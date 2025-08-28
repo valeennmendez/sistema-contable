@@ -1,11 +1,19 @@
 import React from "react";
 import { Settings, User, LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function NavBar() {
+  const navigate = useNavigate();
+
   return (
     <div className="navbar bg-base-200 shadow-md flex h-13 items-center px-2">
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl font-bold">Nombre empresa</a>
+        <a
+          className="btn btn-ghost text-xl font-bold"
+          onClick={() => navigate("/")}
+        >
+          Nombre empresa
+        </a>
       </div>
       <div className="mr-5">
         <ul className="flex gap-5 items-center">

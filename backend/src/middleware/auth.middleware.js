@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import prisma from "../utils/prisma.js";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 
@@ -7,13 +8,15 @@ export const protectedRoute = async (req, res, next) => {
   try {
     const token = req.cookies.token;
 
+    console.log("Protected Route: ", token);
+
     if (!token) return res.status(403).json({ message: "Acceso denegado" });
 
     const decode = jwt.verify(token, process.env.SECRET_KEY);
 
     if (!decode) return res.status(401).json({ message: "Acceso denegado" });
 
-    const usuario = prisma.usuarios.findFirst({ where: { id: id } });
+    const usuario = prisma.usuarios.findFirst({ where: { id: decode.id } });
 
     req.usuario = usuario;
 

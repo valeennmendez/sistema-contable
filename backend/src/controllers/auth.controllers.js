@@ -23,7 +23,7 @@ export const loginController = async (req, res) => {
 
     await generateToken(usuario.id, res);
 
-    return res.status(200).json({ message: "Cuenta logeada!" });
+    return res.status(200).json({ usuario });
   } catch (error) {
     console.log("Se produjo un error en loginController: ", error);
     return res.status(500).json({ error: "Error en el servidor" });
@@ -96,5 +96,14 @@ export const deleteUserController = async (req, res) => {
   } catch (error) {
     console.log("Se produjo un error en deleteUserController: ", error);
     return res.status(500).json({ error: "Error en el servidor" });
+  }
+};
+
+export const checkController = async (req, res) => {
+  try {
+    res.status(200).json(req.user);
+  } catch (error) {
+    console.log("Error en controlador checkController: ", error);
+    res.status(500).json({ message: "Error en el servido" });
   }
 };

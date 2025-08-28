@@ -2,10 +2,30 @@ import { useState, useEffect } from "react";
 import { UserPen, Trash2 } from "lucide-react";
 import axios from "axios";
 import Formulario from "../components/Formulario";
+import { useNavigate } from "react-router-dom";
+import { authStore } from "../store/auth.store";
 
 function UsuariosPage() {
   const [usuarios, setUsuarios] = useState([]);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const { checkAuth } = authStore();
+
+  useEffect(() => {
+    const fetchAuth = async () => {
+      try {
+        const res = await checkAuth();
+        if (res.status !== 200) {
+          navigate("/login");
+        }
+      } catch (error) {
+        console.error("Error al chequear autenticación:", error);
+        navigate("/login");
+      }
+    };
+
+    fetchAuth();
+  }, []);
 
   const fetch = async () => {
     try {
@@ -61,7 +81,10 @@ function UsuariosPage() {
         </h3>
       </div>
       <div className="flex justify-end">
-        <span className=" btn btn-active" onClick={(e) => handleForm(e)}>
+        <span
+          className=" btn btn-accent text-base-100"
+          onClick={(e) => handleForm(e)}
+        >
           Agregar Usuario
         </span>
       </div>
