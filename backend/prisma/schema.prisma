@@ -25,3 +25,26 @@ model Usuarios{
   contrasenia String 
   rol Rol 
 }
+
+enum TipoCuenta {
+  ACTIVO
+  PASIVO
+  PATRIMONIO
+  RESULTADO_POSITIVO
+  RESULTADO_NEGATIVO
+}
+
+
+model Cuenta{
+  id Int @id @default(autoincrement())
+  codigo String @unique 
+  nombre String
+  padreId Int?
+  padre Cuenta? @relation("CuentaHijos", fields: [padreId], references: [id])
+  hijos Cuenta[] @relation("CuentaHijos")
+  imputable Boolean @default(false)
+  activa Boolean @default(true)
+  tipo TipoCuenta 
+  recibeSaldo Boolean @default(true)
+  createdAt DateTime @default(now())
+}

@@ -1,0 +1,148 @@
+import prisma from "../utils/prisma.js";
+
+export const crearCuentaController = async (req, res) => {
+  const {
+    codigo,
+    nombre,
+    padreId,
+    imputable = false,
+    activa = true,
+    tipo,
+  } = req.body;
+
+  const tiposValidos = [
+    "ACTIVO",
+    "PASIVO",
+    "PATRIMONIO",
+    "RESULTADO_POSITIVO",
+    "RESULTADO_NEGATIVO",
+  ];
+
+  try {
+    if (!codigo || !nombre) {
+      return res.status(400).json({ error: "Código y nombre son requeidos." });
+    }
+
+    const cuenta = await prisma.cuenta.findUnique({
+      where: { codigo: codigo },
+    });
+
+    if (cuenta)
+      return res
+        .status(400)
+        .json({ error: "Ya existe una cuenta con ese codigo." });
+
+    if (!tiposValidos.includes(tipo)) {
+      return res.status(400).json({ error: "Tipo de cuenta inválido." });
+    }
+
+    if (padreId) {
+      const padre = await prisma.cuenta.findUnique({ where: { id: padreId } });
+      if (!padre) {
+        return res.status(400).json({ error: "La cuenta padre no existe" });
+      }
+      if (padre.imputable) {
+        return res.status(400).json({
+          error: "No se puede agregar una cuenta hija a una cuenta imputable",
+        });
+      }
+    }
+
+    const nuevaCuenta = await prisma.cuenta.create({
+      data: {
+        codigo: codigo,
+        nombre: nombre,
+        padreId: padreId,
+        imputable: imputable,
+        tipo: tipo,
+        activa: activa,
+        recibeSaldo: imputable,
+      },
+    });
+
+    if (nuevaCuenta)
+      return res
+        .status(201)
+        .json({ message: "Cuenta creada exitosamente!", cuenta: nuevaCuenta });
+    else {
+      return res
+        .status(400)
+        .json({ error: "Ocurrio un error al crear la cuenta" });
+    }
+  } catch (error) {
+    console.log("Se produjo un error en crearCuentaController: ", error);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
+};
+
+export const obtenerCuentasController = async (req, res) => {
+  try {
+    const cuentas = await prisma.cuenta.findMany({
+      where: { activa: true },
+      orderBy: { codigo: "asc" },
+    });
+
+    const mapa = new Map();
+    cuentas.forEach((cuenta) => {
+      mapa.set(cuenta.id, { ...cuenta, hijos: [] });
+    });
+
+    const arbol = [];
+
+    mapa.forEach((cuenta) => {
+      if (cuenta.padreId) {
+        const padre = mapa.get(cuenta.padreId);
+        if (padre) {
+          padre.hijos.push(cuenta);
+        }
+      } else {
+        arbol.push(cuenta);
+      }
+    });
+
+    res.status(200).json(arbol);
+  } catch (error) {
+    console.log("Ocurrio un error en obtenerCuentasController: ", error);
+    return res.status(500).json({ error: "Error en el servidor" });
+  }
+};
+
+/* export const modificarCuentaController = (req, res) => { Preguntar si debo permitir la edicion de cuentas 
+  const { id } = req.query;
+
+  try {
+  } catch (error) {
+    console.log("Ocurrio un error en modificarCuentaController: ", error);
+    return res.status(500).json({ error: "Error en el servidor" });
+  }
+}; */
+
+export const eliminarCuentaController = async (req, res) => {
+  const { id } = req.query;
+
+  try {
+    const cuenta = await prisma.cuenta.findUnique({
+      where: { id: parseInt(id) },
+      include: { hijos: true },
+    });
+    if (!cuenta) return res.status(400).json({ error: "La cuenta no existe" });
+
+    if (cuenta.hijos.length !== 0) {
+      return res
+        .status(400)
+        .json({ error: "No se puede eliminar una cuenta con cuentas hijas." });
+    }
+
+    /*AGREGAR VERIFICACION DE QUE LA CUENTA NO FUE USADA EN NINGUN ASIENTO*/
+
+    const eliminar = await prisma.cuenta.delete({ where: { id: id } });
+    if (eliminar) {
+      return res
+        .status(200)
+        .json({ message: "Cuenta eliminada exitosamente!" });
+    }
+  } catch (error) {
+    console.log("Ocurrio un error en eliminarCuentaController: ", error);
+    return res.status(500).json({ error: "Error en el servidor" });
+  }
+};
