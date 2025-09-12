@@ -102,17 +102,36 @@ function UsuariosPage() {
           </thead>
           <tbody>
             {usuarios.map((usuario, index) => (
-              <tr key={usuario.id} className="text-base-content">
+              <tr
+                key={usuario.id}
+                className="text-base-content hover:bg-base-300"
+              >
                 <th>{index + 1}</th>
-                <td>{usuario?.nombre_completo}</td>
+                <td className="font-semibold text-base-content/70">
+                  {usuario?.nombre_completo}
+                </td>
                 <td>{usuario?.email}</td>
-                <td>{usuario?.rol === "A" ? `Administrador` : `Contador`}</td>
+                <td className="">
+                  {usuario?.rol === "A" ? (
+                    <span className="bg-base-300 font-semibold px-3 py-1 rounded-md">
+                      Administrador
+                    </span>
+                  ) : (
+                    `Contador`
+                  )}
+                </td>
                 <td className="flex flex-row gap-2">
-                  <UserPen className="btn btn-info p-2.5 size-10" />
-                  <Trash2
-                    onClick={(e) => handleDelete(e, usuario?.id, usuario?.rol)}
-                    className="btn btn-error p-2.5 size-10"
-                  />
+                  <span className="border-1 rounded-md border-transparent hover:border-base-content/70">
+                    <UserPen className="p-1 size-7" />
+                  </span>
+                  <span className="border-1 rounded-md border-transparent hover:border-base-content">
+                    <Trash2
+                      onClick={(e) =>
+                        handleDelete(e, usuario?.id, usuario?.rol)
+                      }
+                      className="p-1 size-7"
+                    />
+                  </span>
                 </td>
               </tr>
             ))}

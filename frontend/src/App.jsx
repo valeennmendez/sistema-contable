@@ -6,14 +6,19 @@ import UsuariosPage from "./pages/UsuariosPage";
 import LoginPage from "./pages/LoginPage";
 import { LayoutConMenu } from "./pages/Layouts/LayoutConMenu";
 import { LayoutLogin } from "./pages/Layouts/LayoutLogin";
+import CuentasPage from "./pages/CuentasPage";
+import { themeStore } from "./store/theme.store";
 
 function App() {
+  const { modoNoche } = themeStore();
+
   return (
-    <div data-theme="numb">
+    <div data-theme={modoNoche ? `light` : `numb`}>
       <Routes>
         <Route element={<LayoutConMenu />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/usuarios" element={<UsuariosPage />} />
+          <Route path="/cuentas" element={<CuentasPage />} />
         </Route>
 
         <Route element={<LayoutLogin />}>

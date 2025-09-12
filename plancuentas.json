@@ -1,0 +1,298 @@
+[
+  {
+    "codigo": "100",
+    "nombre": "Activo",
+    "padreCodigo": null,
+    "imputable": false,
+    "activa": true,
+    "tipo": "ACTIVO"
+  },
+  {
+    "codigo": "110",
+    "nombre": "Caja y Bancos",
+    "padreCodigo": "100",
+    "imputable": false,
+    "activa": true,
+    "tipo": "ACTIVO"
+  },
+  {
+    "codigo": "111",
+    "nombre": "Caja",
+    "padreCodigo": "110",
+    "imputable": true,
+    "activa": true,
+    "tipo": "ACTIVO"
+  },
+  {
+    "codigo": "112",
+    "nombre": "Banco plazo fijo",
+    "padreCodigo": "110",
+    "imputable": true,
+    "activa": true,
+    "tipo": "ACTIVO"
+  },
+  {
+    "codigo": "113",
+    "nombre": "Banco c/c",
+    "padreCodigo": "110",
+    "imputable": true,
+    "activa": true,
+    "tipo": "ACTIVO"
+  },
+  {
+    "codigo": "120",
+    "nombre": "Créditos",
+    "padreCodigo": "100",
+    "imputable": false,
+    "activa": true,
+    "tipo": "ACTIVO"
+  },
+  {
+    "codigo": "121",
+    "nombre": "Deudores por Ventas",
+    "padreCodigo": "120",
+    "imputable": true,
+    "activa": true,
+    "tipo": "ACTIVO"
+  },
+  {
+    "codigo": "122",
+    "nombre": "Documentos a Cobrar",
+    "padreCodigo": "120",
+    "imputable": true,
+    "activa": true,
+    "tipo": "ACTIVO"
+  },
+  {
+    "codigo": "123",
+    "nombre": "Valores a Depositar",
+    "padreCodigo": "120",
+    "imputable": true,
+    "activa": true,
+    "tipo": "ACTIVO"
+  },
+  {
+    "codigo": "130",
+    "nombre": "Bienes de cambio",
+    "padreCodigo": "100",
+    "imputable": false,
+    "activa": true,
+    "tipo": "ACTIVO"
+  },
+  {
+    "codigo": "131",
+    "nombre": "Mercaderías",
+    "padreCodigo": "130",
+    "imputable": true,
+    "activa": true,
+    "tipo": "ACTIVO"
+  },
+  {
+    "codigo": "140",
+    "nombre": "Bienes de uso",
+    "padreCodigo": "100",
+    "imputable": false,
+    "activa": true,
+    "tipo": "ACTIVO"
+  },
+  {
+    "codigo": "141",
+    "nombre": "Inmuebles",
+    "padreCodigo": "140",
+    "imputable": true,
+    "activa": true,
+    "tipo": "ACTIVO"
+  },
+  {
+    "codigo": "142",
+    "nombre": "Rodados",
+    "padreCodigo": "140",
+    "imputable": true,
+    "activa": true,
+    "tipo": "ACTIVO"
+  },
+  {
+    "codigo": "143",
+    "nombre": "Instalaciones",
+    "padreCodigo": "140",
+    "imputable": true,
+    "activa": true,
+    "tipo": "ACTIVO"
+  },
+  {
+    "codigo": "200",
+    "nombre": "Pasivo",
+    "padreCodigo": null,
+    "imputable": false,
+    "activa": true,
+    "tipo": "PASIVO"
+  },
+  {
+    "codigo": "210",
+    "nombre": "Deudas Comerciales",
+    "padreCodigo": "200",
+    "imputable": false,
+    "activa": true,
+    "tipo": "PASIVO"
+  },
+  {
+    "codigo": "211",
+    "nombre": "Proveedores",
+    "padreCodigo": "210",
+    "imputable": true,
+    "activa": true,
+    "tipo": "PASIVO"
+  },
+  {
+    "codigo": "212",
+    "nombre": "Sueldos a Pagar",
+    "padreCodigo": "210",
+    "imputable": true,
+    "activa": true,
+    "tipo": "PASIVO"
+  },
+  {
+    "codigo": "220",
+    "nombre": "Deudas Fiscales",
+    "padreCodigo": "200",
+    "imputable": false,
+    "activa": true,
+    "tipo": "PASIVO"
+  },
+  {
+    "codigo": "221",
+    "nombre": "Impuestos a Pagar",
+    "padreCodigo": "220",
+    "imputable": true,
+    "activa": true,
+    "tipo": "PASIVO"
+  },
+  {
+    "codigo": "222",
+    "nombre": "Moratorias",
+    "padreCodigo": "220",
+    "imputable": true,
+    "activa": true,
+    "tipo": "PASIVO"
+  },
+  {
+    "codigo": "230",
+    "nombre": "Préstamos Bancarios",
+    "padreCodigo": "200",
+    "imputable": true,
+    "activa": true,
+    "tipo": "PASIVO"
+  },
+  {
+    "codigo": "300",
+    "nombre": "Patrimonio",
+    "padreCodigo": null,
+    "imputable": false,
+    "activa": true,
+    "tipo": "PATRIMONIO"
+  },
+  {
+    "codigo": "310",
+    "nombre": "Capital",
+    "padreCodigo": "300",
+    "imputable": true,
+    "activa": true,
+    "tipo": "PATRIMONIO"
+  },
+  {
+    "codigo": "320",
+    "nombre": "Resultados",
+    "padreCodigo": "300",
+    "imputable": true,
+    "activa": true,
+    "tipo": "RESULTADO_POSITIVO"
+  },
+  {
+    "codigo": "400",
+    "nombre": "Ingresos",
+    "padreCodigo": null,
+    "imputable": false,
+    "activa": true,
+    "tipo": "RESULTADO_POSITIVO"
+  },
+  {
+    "codigo": "410",
+    "nombre": "Ventas",
+    "padreCodigo": "400",
+    "imputable": false,
+    "activa": true,
+    "tipo": "RESULTADO_POSITIVO"
+  },
+  {
+    "codigo": "411",
+    "nombre": "Ventas",
+    "padreCodigo": "410",
+    "imputable": true,
+    "activa": true,
+    "tipo": "RESULTADO_POSITIVO"
+  },
+  {
+    "codigo": "420",
+    "nombre": "Otros ingresos",
+    "padreCodigo": "400",
+    "imputable": true,
+    "activa": true,
+    "tipo": "RESULTADO_POSITIVO"
+  },
+  {
+    "codigo": "430",
+    "nombre": "Intereses Ganados",
+    "padreCodigo": "400",
+    "imputable": true,
+    "activa": true,
+    "tipo": "RESULTADO_POSITIVO"
+  },
+  {
+    "codigo": "500",
+    "nombre": "Egresos",
+    "padreCodigo": null,
+    "imputable": false,
+    "activa": true,
+    "tipo": "RESULTADO_NEGATIVO"
+  },
+  {
+    "codigo": "510",
+    "nombre": "Costo de Mercadería Vendida",
+    "padreCodigo": "500",
+    "imputable": true,
+    "activa": true,
+    "tipo": "RESULTADO_NEGATIVO"
+  },
+  {
+    "codigo": "520",
+    "nombre": "Impuestos",
+    "padreCodigo": "500",
+    "imputable": true,
+    "activa": true,
+    "tipo": "RESULTADO_NEGATIVO"
+  },
+  {
+    "codigo": "530",
+    "nombre": "Sueldos",
+    "padreCodigo": "500",
+    "imputable": true,
+    "activa": true,
+    "tipo": "RESULTADO_NEGATIVO"
+  },
+  {
+    "codigo": "540",
+    "nombre": "Intereses",
+    "padreCodigo": "500",
+    "imputable": true,
+    "activa": true,
+    "tipo": "RESULTADO_NEGATIVO"
+  },
+  {
+    "codigo": "550",
+    "nombre": "Alquileres",
+    "padreCodigo": "500",
+    "imputable": true,
+    "activa": true,
+    "tipo": "RESULTADO_NEGATIVO"
+  }
+]

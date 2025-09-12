@@ -23,8 +23,11 @@ export const crearCuentaController = async (req, res) => {
       return res.status(400).json({ error: "Código y nombre son requeidos." });
     }
 
+    console.log("TIPO DE DATO: ", typeof codigo);
+    console.log("CODIGO: ", codigo);
+
     const cuenta = await prisma.cuenta.findUnique({
-      where: { codigo: codigo },
+      where: { codigo: codigo.toString() },
     });
 
     if (cuenta)
@@ -37,7 +40,9 @@ export const crearCuentaController = async (req, res) => {
     }
 
     if (padreId) {
-      const padre = await prisma.cuenta.findUnique({ where: { id: padreId } });
+      const padre = await prisma.cuenta.findUnique({
+        where: { id: parseInt(padreId) },
+      });
       if (!padre) {
         return res.status(400).json({ error: "La cuenta padre no existe" });
       }
@@ -50,9 +55,9 @@ export const crearCuentaController = async (req, res) => {
 
     const nuevaCuenta = await prisma.cuenta.create({
       data: {
-        codigo: codigo,
+        codigo: codigo.toString(),
         nombre: nombre,
-        padreId: padreId,
+        padreId: parseInt(padreId),
         imputable: imputable,
         tipo: tipo,
         activa: activa,
@@ -146,3 +151,46 @@ export const eliminarCuentaController = async (req, res) => {
     return res.status(500).json({ error: "Error en el servidor" });
   }
 };
+
+export const obtenerCodigoController = async (req, res) => {
+  const { id } = req.query;
+  try {
+    if (!id || id === "null") {
+      const cuentasRaiz = await prisma.cuenta.findMany({
+        where: { padreId: null },
+      });
+
+      const nuevoCodigo = (cuentasRaiz.length + 1) * 100;
+
+      return res.status(200).json({ codigo: nuevoCodigo.toString() });
+    }
+
+    const codigoPadre = await prisma.cuenta.findUnique({
+      where: { id: parseInt(id) },
+      include: { hijos: true },
+    });
+
+    if (!codigoPadre)
+      return res.status(400).json({ error: "No existe cuenta con ese id" });
+
+    let codigoGenerado;
+
+    if (codigoPadre.padreId === null) {
+      //Significa que es la raiz
+      codigoGenerado =
+        parseInt(codigoPadre.codigo) + (codigoPadre.hijos.length + 1) * 10;
+    } else {
+      codigoGenerado =
+        parseInt(codigoPadre.codigo) + codigoPadre.hijos.length + 1;
+    }
+
+    return res.status(200).json({ codigo: codigoGenerado });
+  } catch (error) {
+    console.log("Ocurrio un error en obtenerCodigoController: ", error);
+    return res.status(500).json({ error: "Error en el servidor" });
+  }
+};
+
+/*AGREGAR FUNCIONALIDADES A LOS BOTONES Y LISTO 
+EN EL FRONT AGREGAR EL MIDDLEWARE
+*/

@@ -45,6 +45,7 @@ model Cuenta{
   imputable Boolean @default(false)
   activa Boolean @default(true)
   tipo TipoCuenta 
+  saldo Float @default(0.0)
   recibeSaldo Boolean @default(true)
   createdAt DateTime @default(now())
 }
