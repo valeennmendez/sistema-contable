@@ -3,6 +3,8 @@ import { axiosInstance } from "../utils/axios";
 
 export const cuentaStore = create((set, get) => ({
   cuentas: [],
+  cuentasActivas: [],
+  cuentasDesactivadas: [],
 
   getCuentas: async () => {
     try {
@@ -35,6 +37,30 @@ export const cuentaStore = create((set, get) => ({
       return res.data;
     } catch (error) {
       console.log("Error en agregarCuenta: ", error);
+      return;
+    }
+  },
+
+  eliminarCuenta: async (data) => {
+    try {
+      const res = await axiosInstance.delete(
+        `plan-cuentas/eliminar-cuenta?id=${data}`
+      );
+      return res;
+    } catch (error) {
+      console.log("Error en eliminarCuenta: ", error);
+      return;
+    }
+  },
+
+  desactivarCuenta: async (data) => {
+    try {
+      const res = await axiosInstance.patch(
+        `plan-cuentas/desactivar-cuenta?id=${data}`
+      );
+      return res;
+    } catch (error) {
+      console.log("Error al desactivar la cuenta: ", error);
       return;
     }
   },

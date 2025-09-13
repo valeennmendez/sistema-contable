@@ -24,6 +24,7 @@ model Usuarios{
   email String 
   contrasenia String 
   rol Rol 
+  activa Boolean @default(true)
 }
 
 enum TipoCuenta {

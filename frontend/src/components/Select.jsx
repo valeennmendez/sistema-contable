@@ -9,7 +9,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 export function SelectDemo({ items, placeholder, onChange, clickeado }) {
-  console.log("clickeado: ", clickeado);
   return (
     <Select onValueChange={onChange} value={clickeado}>
       <SelectTrigger className="w-[17.5rem] border-base-content/20 text-base-content font-semibold">

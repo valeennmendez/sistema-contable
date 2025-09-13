@@ -1,13 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import NavBar from "./components/NavBar";
-import Menu from "./components/Menu";
 import UsuariosPage from "./pages/UsuariosPage";
 import LoginPage from "./pages/LoginPage";
 import { LayoutConMenu } from "./pages/Layouts/LayoutConMenu";
 import { LayoutLogin } from "./pages/Layouts/LayoutLogin";
 import CuentasPage from "./pages/CuentasPage";
 import { themeStore } from "./store/theme.store";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const { modoNoche } = themeStore();
@@ -25,6 +24,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
         </Route>
       </Routes>
+      <Toaster />
     </div>
   );
 }

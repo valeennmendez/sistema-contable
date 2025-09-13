@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { axiosInstance } from "../utils/axios";
 
 export const authStore = create((set, get) => ({
@@ -29,6 +30,14 @@ export const authStore = create((set, get) => ({
       console.log("Error en checkAuth", error);
       set({ authUser: null });
       return error;
+    }
+  },
+
+  logout: async () => {
+    try {
+      await axiosInstance.post("auth/logout");
+    } catch (error) {
+      console.error("Ocurrio un error al cerrar la cuenta.");
     }
   },
 }));

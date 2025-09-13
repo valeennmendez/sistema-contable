@@ -4,12 +4,13 @@ import axios from "axios";
 import Formulario from "../components/Formulario";
 import { useNavigate } from "react-router-dom";
 import { authStore } from "../store/auth.store";
+import toast from "react-hot-toast";
 
 function UsuariosPage() {
   const [usuarios, setUsuarios] = useState([]);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const { checkAuth } = authStore();
+  const { checkAuth, authUser } = authStore();
 
   useEffect(() => {
     const fetchAuth = async () => {
@@ -17,6 +18,13 @@ function UsuariosPage() {
         const res = await checkAuth();
         if (res.status !== 200) {
           navigate("/login");
+        }
+
+        const usuario = res.data;
+        if (usuario.rol !== "A") {
+          toast.error("No tienes permiso para acceder a esta sección");
+          navigate("/");
+          return;
         }
       } catch (error) {
         console.error("Error al chequear autenticación:", error);
@@ -117,7 +125,9 @@ function UsuariosPage() {
                       Administrador
                     </span>
                   ) : (
-                    `Contador`
+                    <span className="bg-base-300 font-semibold px-3 py-1 rounded-md">
+                      Contador
+                    </span>
                   )}
                 </td>
                 <td className="flex flex-row gap-2">

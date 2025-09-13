@@ -83,7 +83,7 @@ export const crearCuentaController = async (req, res) => {
 export const obtenerCuentasController = async (req, res) => {
   try {
     const cuentas = await prisma.cuenta.findMany({
-      where: { activa: true },
+      where: {},
       orderBy: { codigo: "asc" },
     });
 
@@ -132,15 +132,17 @@ export const eliminarCuentaController = async (req, res) => {
     });
     if (!cuenta) return res.status(400).json({ error: "La cuenta no existe" });
 
-    if (cuenta.hijos.length !== 0) {
-      return res
-        .status(400)
-        .json({ error: "No se puede eliminar una cuenta con cuentas hijas." });
+    if (cuenta.hijos.length !== 0 || cuenta.saldo > 0) {
+      return res.status(400).json({
+        error: "No se puede eliminar una cuenta con cuentas hijas o con saldo",
+      });
     }
 
     /*AGREGAR VERIFICACION DE QUE LA CUENTA NO FUE USADA EN NINGUN ASIENTO*/
 
-    const eliminar = await prisma.cuenta.delete({ where: { id: id } });
+    const eliminar = await prisma.cuenta.delete({
+      where: { id: parseInt(id) },
+    });
     if (eliminar) {
       return res
         .status(200)
@@ -187,6 +189,37 @@ export const obtenerCodigoController = async (req, res) => {
     return res.status(200).json({ codigo: codigoGenerado });
   } catch (error) {
     console.log("Ocurrio un error en obtenerCodigoController: ", error);
+    return res.status(500).json({ error: "Error en el servidor" });
+  }
+};
+
+export const desactivarCuenta = async (req, res) => {
+  const { id } = req.query;
+  try {
+    console.log("id cuenta descativada: ", id);
+    if (!id) return res.status(400).json({ error: "Es necesario el id" });
+
+    const cuenta = await prisma.cuenta.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    if (!cuenta) return res.status(400).json({ error: "La cuenta no existe" });
+
+    const desactivar = await prisma.cuenta.update({
+      where: { id: parseInt(id) },
+      data: {
+        activa: !cuenta.activa,
+      },
+    });
+
+    if (!desactivar)
+      return res
+        .status(400)
+        .json({ error: "Ocurrio un error al desactivar la cuenta" });
+
+    return res.status(200).json({ message: "Cuenta desactivada" });
+  } catch (error) {
+    console.log("Ocurrio un error en desactivarCuenta: ", error);
     return res.status(500).json({ error: "Error en el servidor" });
   }
 };

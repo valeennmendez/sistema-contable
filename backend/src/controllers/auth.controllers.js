@@ -104,6 +104,16 @@ export const checkController = async (req, res) => {
     res.status(200).json(req.user);
   } catch (error) {
     console.log("Error en controlador checkController: ", error);
-    res.status(500).json({ message: "Error en el servido" });
+    res.status(500).json({ message: "Error en el servidor" });
+  }
+};
+
+export const logoutController = (req, res) => {
+  try {
+    res.cookie("token", "", { maxAge: 0 });
+    res.status(200).json({ message: "Deslogueado exitosamente." });
+  } catch (error) {
+    console.log("Error al desloguearse", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };

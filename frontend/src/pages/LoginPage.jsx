@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Computer } from "lucide-react";
 import { authStore } from "../store/auth.store";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 function LoginPage() {
   const [data, setData] = useState({
@@ -16,8 +17,9 @@ function LoginPage() {
     const res = await login(data);
     if (res.status === 200) {
       navigate("/");
+      toast.success("Logueo exitoso!");
     } else {
-      console.log("Ocurrio un error");
+      toast.error("Verifica tu contraseña y/o email");
     }
   };
 

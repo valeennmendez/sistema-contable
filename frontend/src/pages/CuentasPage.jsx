@@ -5,9 +5,12 @@ import Toggle from "../components/Toggle";
 import { Plus } from "lucide-react";
 import { SelectDemo } from "../components/Select";
 import { recolectarNombresNoImputables } from "../utils/funciones";
+import { authStore } from "../store/auth.store";
+import { useNavigate } from "react-router-dom";
 
 function CuentasPage() {
   const { getCuentas, cuentas, getCodigo, agregarCuenta } = cuentaStore();
+  const { checkAuth, authUser } = authStore();
   const itemsTipos = [
     { nombre: "Activo", id: "ACTIVO" },
     { nombre: "Pasivo", id: "PASIVO" },
@@ -18,17 +21,32 @@ function CuentasPage() {
   const [cuentaPadre, setCuentaPadre] = useState("");
   const [itemsCuentasPadres, setItemsCuentasPadres] = useState([]);
   const [tipoCuenta, setTipoCuenta] = useState("");
+  const navigate = useNavigate();
 
   const [cuentaData, setCuentaData] = useState({
     codigo: codigo,
     nombre: "",
     padreId: null,
-    imputable: false,
+    imputable: true,
     activa: true,
     tipo: "",
   });
 
-  console.log("CuentaData: ", cuentaData);
+  useEffect(() => {
+    const fetchAuth = async () => {
+      try {
+        const res = await checkAuth();
+        if (res.status !== 200) {
+          navigate("/login");
+        }
+      } catch (error) {
+        console.error("Error al chequear autenticación:", error);
+        navigate("/login");
+      }
+    };
+
+    fetchAuth();
+  }, []);
 
   useEffect(() => {
     if (cuentas) {
@@ -66,6 +84,7 @@ function CuentasPage() {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
+      console.log("Cuenta data: ", cuentaData);
       await agregarCuenta(cuentaData);
       await getCuentas();
     } catch (error) {
@@ -73,8 +92,6 @@ function CuentasPage() {
       return;
     }
   };
-
-  console.log("Tipo de cuenta desde padre: ", tipoCuenta);
 
   return (
     <div className=" text-black min-w-[calc(100vw-15rem)] bg-base-100 p-5 min-h-[calc(100vh-4rem)]">

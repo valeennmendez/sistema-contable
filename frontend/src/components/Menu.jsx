@@ -1,10 +1,29 @@
 import { Home, User, NotebookPen, Receipt } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { themeStore } from "../store/theme.store";
+import { authStore } from "../store/auth.store";
+import { useEffect } from "react";
 
 function Menu() {
   const navigate = useNavigate();
   const { modoNoche, cambiarTheme } = themeStore();
+  const { checkAuth, authUser } = authStore();
+
+  useEffect(() => {
+    const fetchAuth = async () => {
+      try {
+        const res = await checkAuth();
+        if (res.status !== 200) {
+          navigate("/login");
+        }
+      } catch (error) {
+        console.error("Error al chequear autenticación:", error);
+        navigate("/login");
+      }
+    };
+
+    fetchAuth();
+  }, []);
 
   console.log("modo noche:", modoNoche);
 
@@ -20,7 +39,9 @@ function Menu() {
             Inicio
           </li>
           <li
-            className="btn btn-ghost font-semibold flex flex-row"
+            className={`${
+              authUser?.rol !== "A" ? `hidden` : `flex`
+            } btn btn-ghost font-semibold  flex-row`}
             onClick={() => navigate("/usuarios")}
           >
             <User className="size-6" />

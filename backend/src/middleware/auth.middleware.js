@@ -16,9 +16,12 @@ export const protectedRoute = async (req, res, next) => {
 
     if (!decode) return res.status(401).json({ message: "Acceso denegado" });
 
-    const usuario = prisma.usuarios.findFirst({ where: { id: decode.id } });
+    const usuario = await prisma.usuarios.findFirst({
+      where: { id: decode.id },
+      omit: { contrasenia: true },
+    });
 
-    req.usuario = usuario;
+    req.user = usuario;
 
     next();
   } catch (error) {

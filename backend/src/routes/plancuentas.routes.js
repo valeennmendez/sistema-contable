@@ -3,6 +3,7 @@ import {
   crearCuentaController,
   //modificarCuentaController,
   obtenerCuentasController,
+  desactivarCuenta,
   eliminarCuentaController,
   obtenerCodigoController,
 } from "../controllers/cuentas.controllers.js";
@@ -14,5 +15,6 @@ router.post("/crear-cuenta", crearCuentaController);
 router.get("/cuentas", obtenerCuentasController);
 router.delete("/eliminar-cuenta", eliminarCuentaController);
 router.get("/obtener-codigo", obtenerCodigoController);
+router.patch("/desactivar-cuenta", desactivarCuenta);
 
 export default router;

@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   XCircle,
   UserPen,
+  Ban,
   Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,11 +21,44 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { cuentaStore } from "../store/cuentas.store";
+import { authStore } from "../store/auth.store";
 
 function TreeRow({ node, level, expandedNodes, onToggleExpand }) {
   const hasChildren = node.hijos && node.hijos.length > 0;
   const isExpanded = expandedNodes.has(node.id);
   const indentWidth = level * 24; // 24px per level
+
+  const { eliminarCuenta, getCuentas, desactivarCuenta } = cuentaStore();
+  const { authUser } = authStore();
+
+  const handleDelete = async (id) => {
+    if (authUser.rol !== "A") {
+      window.alert("No tienes permisos para esta acción");
+      return;
+    }
+
+    if (window.confirm("Estas seguro de eliminar la cuenta?")) {
+      try {
+        await eliminarCuenta(id);
+        await getCuentas();
+      } catch (error) {
+        console.log("Error en handleDeleta: ", error);
+        return;
+      }
+    }
+  };
+
+  const handleDesactivar = async (id) => {
+    try {
+      const res = await desactivarCuenta(id);
+      console.log("response: ", res);
+      await getCuentas();
+    } catch (error) {
+      console.log("Error en handleDesactivar: ", error);
+      return;
+    }
+  };
 
   return (
     <>
@@ -110,11 +144,20 @@ function TreeRow({ node, level, expandedNodes, onToggleExpand }) {
         </TableCell>
         <TableCell>
           <div className="flex flex-row">
-            <span className="border-1 rounded-md border-transparent hover:border-base-content/70">
+            <span className="border-1 rounded-md border-transparent hover:border-base-content/70 cursor-pointer">
               <UserPen className="p-1 size-7 text-base-content" />
             </span>
-            <span className="border-1 rounded-md border-transparent hover:border-base-content">
+            <span
+              className="border-1 rounded-md border-transparent hover:border-base-content cursor-pointer"
+              onClick={() => handleDelete(node.id)}
+            >
               <Trash2 className="p-1 size-7 text-base-content" />
+            </span>
+            <span
+              onClick={() => handleDesactivar(node.id)}
+              className="border-1 flex items-center justify-center rounded-md border-transparent hover:border-base-content cursor-pointer"
+            >
+              <Ban className="p-0.5 size-6 text-base-content" />
             </span>
           </div>
         </TableCell>

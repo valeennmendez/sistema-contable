@@ -3,8 +3,10 @@ import { authStore } from "../store/auth.store";
 import { useNavigate } from "react-router-dom";
 
 function HomePage() {
-  const { checkAuth } = authStore();
+  const { checkAuth, authUser } = authStore();
   const navigate = useNavigate();
+
+  console.log("Datos del usuario: ", authUser);
 
   useEffect(() => {
     const fetchAuth = async () => {
