@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import { UserPen, Trash2 } from "lucide-react";
+import {
+  UserPen,
+  Trash2,
+  Ban,
+  CheckCircle2,
+  XCircle,
+  Check,
+} from "lucide-react";
 import axios from "axios";
 import Formulario from "../components/Formulario";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +17,7 @@ function UsuariosPage() {
   const [usuarios, setUsuarios] = useState([]);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const { checkAuth, authUser } = authStore();
+  const { checkAuth, desactivarUsuario } = authStore();
 
   useEffect(() => {
     const fetchAuth = async () => {
@@ -58,7 +65,7 @@ function UsuariosPage() {
     e.preventDefault();
     try {
       if (rol === "A") {
-        window.alert("No puedes eliminar a otros administradores");
+        toast.error("No puedes eliminar a otros administradores");
         return;
       }
       if (window.confirm("¿Estas seguro de eliminar al usuario?")) {
@@ -70,6 +77,21 @@ function UsuariosPage() {
       }
     } catch (error) {
       console.log("Ocurrio un error al eliminar el usuario: ", error);
+    }
+  };
+
+  const handleDesactivar = async (id, rol) => {
+    try {
+      if (rol === "A") {
+        toast.error("No puedes desactivar la cuenta de un administrador");
+        return;
+      }
+
+      await desactivarUsuario(id);
+      await fetch();
+    } catch (error) {
+      console.log("Error en handleDesactivar: ", error);
+      return;
     }
   };
 
@@ -90,7 +112,7 @@ function UsuariosPage() {
       </div>
       <div className="flex justify-end">
         <span
-          className=" btn btn-accent text-base-100"
+          className=" btn bg-base-content rounded-lg text-base-100"
           onClick={(e) => handleForm(e)}
         >
           Agregar Usuario
@@ -105,6 +127,8 @@ function UsuariosPage() {
               <th>Nombre Completo</th>
               <th>Email</th>
               <th>Rol</th>
+              <th>Activo</th>
+              <th>Fecha de Alta</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -130,17 +154,42 @@ function UsuariosPage() {
                     </span>
                   )}
                 </td>
+                <td>
+                  <div className="flex items-center gap-1.5">
+                    {usuario?.activa ? (
+                      <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    ) : (
+                      <XCircle className="h-4 w-4 text-red-600" />
+                    )}
+                    <span className="text-sm text-base-content">
+                      {usuario?.activa ? "Activa" : "Inactiva"}
+                    </span>
+                  </div>
+                </td>
+                <td>
+                  {new Date(usuario?.createdAt).toLocaleDateString("es-ES")}
+                </td>
                 <td className="flex flex-row gap-2">
-                  <span className="border-1 rounded-md border-transparent hover:border-base-content/70">
+                  <span className="border-1 cursor-pointer rounded-md border-transparent hover:border-base-content/70">
                     <UserPen className="p-1 size-7" />
                   </span>
-                  <span className="border-1 rounded-md border-transparent hover:border-base-content">
+                  <span className="border-1 cursor-pointer rounded-md border-transparent hover:border-base-content">
                     <Trash2
                       onClick={(e) =>
                         handleDelete(e, usuario?.id, usuario?.rol)
                       }
                       className="p-1 size-7"
                     />
+                  </span>
+                  <span
+                    onClick={() => handleDesactivar(usuario?.id, usuario?.rol)}
+                    className="border-1 rounded-md border-transparent hover:border-base-content cursor-pointer flex justify-center items-center"
+                  >
+                    {usuario?.activa === true ? (
+                      <Ban className="p-0.5 px-1 size-7 text-base-content" />
+                    ) : (
+                      <Check className="p-0.5 px-1 size-7 text-base-content" />
+                    )}
                   </span>
                 </td>
               </tr>

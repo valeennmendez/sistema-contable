@@ -18,8 +18,6 @@ function LoginPage() {
     if (res.status === 200) {
       navigate("/");
       toast.success("Logueo exitoso!");
-    } else {
-      toast.error("Verifica tu contraseña y/o email");
     }
   };
 

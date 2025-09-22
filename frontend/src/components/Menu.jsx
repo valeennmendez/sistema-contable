@@ -25,8 +25,6 @@ function Menu() {
     fetchAuth();
   }, []);
 
-  console.log("modo noche:", modoNoche);
-
   return (
     <div className="min-h-[calc(100vh-4rem)] w-60  bg-base-200 flex flex-col">
       <div className="p-5 flex justify-center">
@@ -54,7 +52,10 @@ function Menu() {
             <NotebookPen className="size-5" />
             Cuentas
           </li>
-          <li className="btn btn-ghost font-semibold flex flex-row">
+          <li
+            className="btn btn-ghost font-semibold flex flex-row"
+            onClick={() => navigate("/asientos")}
+          >
             <Receipt className="size-6" />
             Asientos
           </li>

@@ -112,13 +112,13 @@ function CuentasPage() {
           </span>
         </div>
         <form onSubmit={handleSubmit} className="mt-5">
-          <div className="grid grid-cols-2 grid-rows-2">
+          <div className="grid grid-cols-2 gap-x-5 grid-rows-2">
             <div className="flex flex-col">
               <span className="font-semibold text-base-content">Codigo</span>
               <input
                 placeholder={codigo}
                 type="text"
-                className="w-70 h-9 rounded-md px-3 mt-1 mb-1 bg-base-300 border-base-content/20 border-1"
+                className="h-9 rounded-md px-3 mt-1 mb-1 bg-base-300 border-base-content/20 border-1"
                 readOnly
                 value={codigo}
               />
@@ -128,7 +128,7 @@ function CuentasPage() {
               <input
                 placeholder="Ej. Inversiones"
                 type="text"
-                className="w-70 h-9 px-3 rounded-md mt-1 mb-1 border-base-content/20 border-1"
+                className="h-9 px-3 rounded-md mt-1 mb-1 border-base-content/20 border-1"
                 onChange={(e) =>
                   setCuentaData({ ...cuentaData, nombre: e.target.value })
                 }

@@ -11,7 +11,7 @@ import {
 export function SelectDemo({ items, placeholder, onChange, clickeado }) {
   return (
     <Select onValueChange={onChange} value={clickeado}>
-      <SelectTrigger className="w-[17.5rem] border-base-content/20 text-base-content font-semibold">
+      <SelectTrigger className="w-full border-base-content/20 text-base-content font-semibold">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>

@@ -25,6 +25,8 @@ model Usuarios{
   contrasenia String 
   rol Rol 
   activa Boolean @default(true)
+  createdAt DateTime @default(now())
+  asientos Asiento[]  @relation("UsuarioCreador")
 }
 
 enum TipoCuenta {
@@ -49,4 +51,25 @@ model Cuenta{
   saldo Float @default(0.0)
   recibeSaldo Boolean @default(true)
   createdAt DateTime @default(now())
+  lineaAsientos LineaAsiento[] @relation("CuentaUsada")
+}
+
+model Asiento{
+   id          Int       @id @default(autoincrement())
+  fecha       DateTime 
+  descripcion String
+  usuarioId   Int
+  usuario     Usuarios   @relation("UsuarioCreador",fields: [usuarioId], references: [id])
+  lineas      LineaAsiento[]
+  creadoEn    DateTime  @default(now())
+}
+
+model LineaAsiento{
+    id        Int      @id @default(autoincrement())
+  asientoId Int
+  asiento   Asiento  @relation(fields: [asientoId], references: [id])
+  cuentaId  Int
+  cuenta    Cuenta   @relation("CuentaUsada",fields: [cuentaId], references: [id])
+  debe      Float?   
+  haber     Float?   
 }

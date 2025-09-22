@@ -7,6 +7,7 @@ import { LayoutLogin } from "./pages/Layouts/LayoutLogin";
 import CuentasPage from "./pages/CuentasPage";
 import { themeStore } from "./store/theme.store";
 import { Toaster } from "react-hot-toast";
+import AsientosPage from "./pages/AsientosPage";
 
 function App() {
   const { modoNoche } = themeStore();
@@ -18,6 +19,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/usuarios" element={<UsuariosPage />} />
           <Route path="/cuentas" element={<CuentasPage />} />
+          <Route path="/asientos" element={<AsientosPage />} />
         </Route>
 
         <Route element={<LayoutLogin />}>
@@ -30,3 +32,7 @@ function App() {
 }
 
 export default App;
+
+/* VER SI SE PUEDE MEJORAR CON MULTIPLE PROTECTED ROUTES (OUTLER) VER VIDEO DE FAZT
+https://www.youtube.com/watch?v=42tFXd1PdCk
+*/

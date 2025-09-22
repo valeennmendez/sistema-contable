@@ -21,6 +21,15 @@ export const loginController = async (req, res) => {
       return res.status(400).json({ error: "Las contraseñas no coinciden" });
     }
 
+    if (usuario.activa === false) {
+      return res
+        .status(404)
+        .json({
+          error:
+            "La cuenta esta desactivada. Por favor, contactate con un administrador",
+        });
+    }
+
     await generateToken(usuario.id, res);
 
     return res.status(200).json({ usuario });
@@ -115,5 +124,35 @@ export const logoutController = (req, res) => {
   } catch (error) {
     console.log("Error al desloguearse", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const desactivarUsuarioController = async (req, res) => {
+  const { id } = req.query;
+  try {
+    if (!id) return res.status(400).json({ error: "Es necesario el id" });
+
+    const usuario = await prisma.usuarios.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    if (!usuario) return res.status(400).json({ error: "La cuenta no existe" });
+
+    const desactivar = await prisma.usuarios.update({
+      where: { id: parseInt(id) },
+      data: {
+        activa: !usuario.activa,
+      },
+    });
+
+    if (!desactivar)
+      return res
+        .status(400)
+        .json({ error: "Ocurrio un error al desactivar la cuenta" });
+
+    return res.status(200).json({ message: "Cuenta desactivada" });
+  } catch (error) {
+    console.log("Ocurrio un error en desactivarCuenta: ", error);
+    return res.status(500).json({ error: "Error en el servidor" });
   }
 };
