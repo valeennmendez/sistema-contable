@@ -7,6 +7,8 @@ import {
   checkController,
   logoutController,
   desactivarUsuarioController,
+  modificarUsuarioController,
+  obtenerUsuarioController,
 } from "../controllers/auth.controllers.js";
 import { protectedRoute } from "../middleware/auth.middleware.js";
 
@@ -19,5 +21,7 @@ router.delete("/delete-user", deleteUserController);
 router.post("/logout", logoutController);
 router.get("/check", protectedRoute, checkController);
 router.patch("/desactivar-usuario", desactivarUsuarioController);
+router.patch("/modificar-usuario", modificarUsuarioController);
+router.get("/obtener-usuario", obtenerUsuarioController);
 
 export default router;

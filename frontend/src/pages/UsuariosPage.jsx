@@ -12,12 +12,16 @@ import Formulario from "../components/Formulario";
 import { useNavigate } from "react-router-dom";
 import { authStore } from "../store/auth.store";
 import toast from "react-hot-toast";
+import ModificarUsuario from "@/components/ModificarUsuario";
+import { id } from "date-fns/locale";
 
 function UsuariosPage() {
   const [usuarios, setUsuarios] = useState([]);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const { checkAuth, desactivarUsuario } = authStore();
+  const [modificarUsuario, setModificarUsuairo] = useState(false);
+  const [idModificar, setIdModificar] = useState(null);
 
   useEffect(() => {
     const fetchAuth = async () => {
@@ -95,6 +99,16 @@ function UsuariosPage() {
     }
   };
 
+  const handleModificar = async (id, rol) => {
+    if (rol === "A") {
+      toast.error("No puedes modificar datos de otros administradores");
+      return;
+    }
+
+    setModificarUsuairo(true);
+    setIdModificar(id);
+  };
+
   return (
     <div className="relative text-black min-w-[calc(100vw-15rem)] bg-base-100 p-5 min-h-[calc(100vh-4rem)]">
       <div
@@ -103,6 +117,18 @@ function UsuariosPage() {
         } w-full h-full overflow-hidden  items-center justify-center inset-0 absolute z-10`}
       >
         <Formulario setOpen={setOpen} open={open} fetchUsuarios={fetch} />
+      </div>
+      <div
+        className={`${
+          modificarUsuario ? `flex` : `hidden`
+        } w-full h-full overflow-hidden  items-center justify-center inset-0 absolute z-10`}
+      >
+        <ModificarUsuario
+          id={idModificar}
+          setModificarUsuario={setModificarUsuairo}
+          modificarUsuario={modificarUsuario}
+          fetch={fetch}
+        />
       </div>
       <div>
         <h1 className="font-bold text-4xl text-base-content">Usuarios</h1>
@@ -170,7 +196,10 @@ function UsuariosPage() {
                   {new Date(usuario?.createdAt).toLocaleDateString("es-ES")}
                 </td>
                 <td className="flex flex-row gap-2">
-                  <span className="border-1 cursor-pointer rounded-md border-transparent hover:border-base-content/70">
+                  <span
+                    className="border-1 cursor-pointer rounded-md border-transparent hover:border-base-content/70"
+                    onClick={() => handleModificar(usuario?.id, usuario?.rol)}
+                  >
                     <UserPen className="p-1 size-7" />
                   </span>
                   <span className="border-1 cursor-pointer rounded-md border-transparent hover:border-base-content">

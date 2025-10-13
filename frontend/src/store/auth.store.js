@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 export const authStore = create((set, get) => ({
   isLoginging: false,
   authUser: null,
+  usuarioXId: null,
 
   login: async (data) => {
     set({ isLoginging: true });
@@ -52,6 +53,32 @@ export const authStore = create((set, get) => ({
       return res;
     } catch (error) {
       console.log("Error al desactivar al usuario: ", error);
+      return;
+    }
+  },
+
+  obtenerUsuario: async (id) => {
+    try {
+      const res = await axiosInstance.get(`auth/obtener-usuario?id=${id}`);
+      set({ usuarioXId: res.data.datosUsuario });
+    } catch (error) {
+      console.log("Error al modificar el usuario: ", error);
+      return;
+    }
+  },
+
+  modificarUsuarios: async (data, id) => {
+    try {
+      const res = await axiosInstance.patch(
+        `auth/modificar-usuario?id=${id}`,
+        data
+      );
+      if (res.status === 200) {
+        toast.success("Usuario modificado");
+      }
+      return;
+    } catch (error) {
+      console.log("Error en modificarUsuario: ", error);
       return;
     }
   },

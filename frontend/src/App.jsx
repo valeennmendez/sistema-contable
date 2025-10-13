@@ -8,6 +8,8 @@ import CuentasPage from "./pages/CuentasPage";
 import { themeStore } from "./store/theme.store";
 import { Toaster } from "react-hot-toast";
 import AsientosPage from "./pages/AsientosPage";
+import LibroDiarioPage from "./pages/LibroDiarioPage";
+import LibroMayorPage from "./pages/LibroMayorPage";
 
 function App() {
   const { modoNoche } = themeStore();
@@ -20,6 +22,8 @@ function App() {
           <Route path="/usuarios" element={<UsuariosPage />} />
           <Route path="/cuentas" element={<CuentasPage />} />
           <Route path="/asientos" element={<AsientosPage />} />
+          <Route path="/librodiario" element={<LibroDiarioPage />} />
+          <Route path="/libromayor" element={<LibroMayorPage />} />
         </Route>
 
         <Route element={<LayoutLogin />}>

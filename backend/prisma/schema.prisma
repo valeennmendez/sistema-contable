@@ -56,7 +56,7 @@ model Cuenta{
 
 model Asiento{
    id          Int       @id @default(autoincrement())
-  fecha       DateTime 
+  fecha       DateTime  @db.Date
   descripcion String
   usuarioId   Int
   usuario     Usuarios   @relation("UsuarioCreador",fields: [usuarioId], references: [id])

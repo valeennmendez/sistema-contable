@@ -112,16 +112,6 @@ export const obtenerCuentasController = async (req, res) => {
   }
 };
 
-/* export const modificarCuentaController = (req, res) => { Preguntar si debo permitir la edicion de cuentas 
-  const { id } = req.query;
-
-  try {
-  } catch (error) {
-    console.log("Ocurrio un error en modificarCuentaController: ", error);
-    return res.status(500).json({ error: "Error en el servidor" });
-  }
-}; */
-
 export const eliminarCuentaController = async (req, res) => {
   const { id } = req.query;
 
@@ -138,7 +128,14 @@ export const eliminarCuentaController = async (req, res) => {
       });
     }
 
-    /*AGREGAR VERIFICACION DE QUE LA CUENTA NO FUE USADA EN NINGUN ASIENTO*/
+    const cuentaUsadaEnAsiento = await prisma.lineaAsiento.findFirst({
+      where: { id: parseInt(id) },
+    });
+
+    if (cuentaUsadaEnAsiento)
+      return res
+        .status(400)
+        .json({ error: "La cuenta fue utilizada en asientos" });
 
     const eliminar = await prisma.cuenta.delete({
       where: { id: parseInt(id) },

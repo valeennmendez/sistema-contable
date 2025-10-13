@@ -16,6 +16,7 @@ function CuentasPage() {
     { nombre: "Pasivo", id: "PASIVO" },
     { nombre: "R+", id: "RESULTADO_POSITIVO" },
     { nombre: "R-", id: "RESULTADO_NEGATIVO" },
+    { nombre: "Patrimonio", id: "PATRIMONIO" },
   ];
   const [codigo, setCodigo] = useState("Se genera automaticamente");
   const [cuentaPadre, setCuentaPadre] = useState("");

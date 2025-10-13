@@ -8,8 +8,6 @@ export const protectedRoute = async (req, res, next) => {
   try {
     const token = req.cookies.token;
 
-    console.log("Protected Route: ", token);
-
     if (!token) return res.status(403).json({ message: "Acceso denegado" });
 
     const decode = jwt.verify(token, process.env.SECRET_KEY);

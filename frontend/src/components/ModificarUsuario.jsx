@@ -1,38 +1,43 @@
-import axios from "axios";
+import { authStore } from "@/store/auth.store";
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-function Formulario({ setOpen, open, fetchUsuarios }) {
-  const [data, setData] = useState({
-    nombre_completo: "",
-    email: "",
-    contrasenia: "",
-    rol: "",
-  });
+function ModificarUsuario({
+  id,
+  setModificarUsuario,
+  modificarUsuario,
+  fetch,
+}) {
+  const { obtenerUsuario, usuarioXId, modificarUsuarios } = authStore();
+  const [formData, setFormData] = useState({});
+
+  useEffect(() => {
+    if (id) obtenerUsuario(id);
+  }, [id]);
+
+  useEffect(() => {
+    if (usuarioXId) {
+      setFormData({
+        nombre_completo: usuarioXId.nombre_completo,
+        email: usuarioXId.email,
+        rol: usuarioXId.rol,
+      });
+    }
+  }, [usuarioXId]);
 
   function handleForm() {
-    setOpen(!open);
+    setModificarUsuario(!modificarUsuario);
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
-    try {
-      const res = await axios.post(
-        "http://localhost:5001/api/auth/add-user",
-        data
-      );
-      console.log(res);
-      await fetchUsuarios();
-      setOpen(!open);
-    } catch (error) {
-      console.log("Error al enviar los datos");
-    } finally {
-      setOpen(!open);
-    }
+    await modificarUsuarios(formData, id);
+    setModificarUsuario(false);
+    fetch();
   }
 
   return (
-    <div className="relative bg-base-100  border-1 border-base-content/20 rounded-lg flex flex-col items-center p-5 w-[40rem] h-[31rem]">
+    <div className="relative bg-base-100 border-1 border-base-content/20 rounded-lg flex flex-col items-center p-5 w-[40rem] h-[30rem]">
       <div className="absolute right-0 px-5">
         <X
           className="text-base-content p-0 size-5 cursor-pointer"
@@ -40,11 +45,11 @@ function Formulario({ setOpen, open, fetchUsuarios }) {
         />
       </div>
       <div>
-        <h1 className="font-bold text-base-content/90 text-3xl">
-          Agregar nuevo usuario
+        <h1 className="font-bold text-center text-base-content/90 text-3xl">
+          Modificar Usuario
         </h1>
-        <h3 className="text-base-content/70 text-md">
-          Llene los campos para agregar a un usuario
+        <h3 className="text-base-content/70 text-md text-center">
+          Modifique los datos que necesite
         </h3>
       </div>
       <div className=" w-full h-[24rem] py-5 flex items-center justify-center">
@@ -60,8 +65,9 @@ function Formulario({ setOpen, open, fetchUsuarios }) {
             <input
               type="text"
               className="bg-base-100 px-2 py-1.5 rounded-md w-full text-base-content border-1 border-base-content/40 "
+              value={formData?.nombre_completo}
               onChange={(e) =>
-                setData({ ...data, nombre_completo: e.target.value })
+                setFormData({ ...formData, nombre_completo: e.target.value })
               }
             />
           </div>
@@ -70,16 +76,9 @@ function Formulario({ setOpen, open, fetchUsuarios }) {
             <input
               type="email"
               className="bg-base-100 px-2 py-1.5 rounded-md w-full text-base-content border-1 border-base-content/40 "
-              onChange={(e) => setData({ ...data, email: e.target.value })}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <span className="text-base-content font-semibold">Contraseña</span>
-            <input
-              type="password"
-              className="bg-base-100 px-2 py-1.5 rounded-md w-full text-base-content border-1 border-base-content/40 "
+              value={formData?.email}
               onChange={(e) =>
-                setData({ ...data, contrasenia: e.target.value })
+                setFormData({ ...formData, email: e.target.value })
               }
             />
           </div>
@@ -89,7 +88,10 @@ function Formulario({ setOpen, open, fetchUsuarios }) {
               name=""
               id=""
               className="bg-base-100 px-2 py-1.5 rounded-md w-full text-base-content border-1 border-base-content/40 "
-              onChange={(e) => setData({ ...data, rol: e.target.value })}
+              value={formData?.rol}
+              onChange={(e) =>
+                setFormData({ ...formData, rol: e.target.value })
+              }
             >
               <option value="" hidden>
                 Elija el rol
@@ -101,9 +103,9 @@ function Formulario({ setOpen, open, fetchUsuarios }) {
           <div className="flex items-center justify-center">
             <button
               type="submit"
-              className="bg-base-content w-full h-8 mt-5 font-semibold rounded-md text-base-100 cursor-pointer"
+              className="bg-base-content w-full h-8 mt-5 font-semibold rounded-md text-base-100"
             >
-              Agregar Usuario
+              Modificar Usuario
             </button>
           </div>
         </form>
@@ -112,4 +114,4 @@ function Formulario({ setOpen, open, fetchUsuarios }) {
   );
 }
 
-export default Formulario;
+export default ModificarUsuario;

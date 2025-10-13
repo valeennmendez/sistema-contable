@@ -1,4 +1,11 @@
-import { Home, User, NotebookPen, Receipt } from "lucide-react";
+import {
+  Home,
+  User,
+  NotebookPen,
+  Receipt,
+  Book,
+  BookMarked,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { themeStore } from "../store/theme.store";
 import { authStore } from "../store/auth.store";
@@ -28,9 +35,9 @@ function Menu() {
   return (
     <div className="min-h-[calc(100vh-4rem)] w-60  bg-base-200 flex flex-col">
       <div className="p-5 flex justify-center">
-        <ul className="flex flex-col gap-3">
+        <ul className="flex flex-col gap-3 items-start ml-5 w-full">
           <li
-            className="btn btn-ghost font-semibold flex flex-row "
+            className="btn btn-ghost font-semibold flex flex-row gap-3"
             onClick={() => navigate("/")}
           >
             <Home className="size-6" />
@@ -39,25 +46,39 @@ function Menu() {
           <li
             className={`${
               authUser?.rol !== "A" ? `hidden` : `flex`
-            } btn btn-ghost font-semibold  flex-row`}
+            } btn btn-ghost font-semibold  flex-row gap-3 `}
             onClick={() => navigate("/usuarios")}
           >
             <User className="size-6" />
             Usuarios
           </li>
           <li
-            className="btn btn-ghost font-semibold flex flex-row"
+            className="btn btn-ghost font-semibold flex flex-row gap-3"
             onClick={() => navigate("/cuentas")}
           >
             <NotebookPen className="size-5" />
             Cuentas
           </li>
           <li
-            className="btn btn-ghost font-semibold flex flex-row"
+            className="btn btn-ghost font-semibold flex flex-row gap-3"
             onClick={() => navigate("/asientos")}
           >
             <Receipt className="size-6" />
             Asientos
+          </li>
+          <li
+            className="btn btn-ghost font-semibold flex flex-row gap-3"
+            onClick={() => navigate("/librodiario")}
+          >
+            <Book className="size-6" />
+            Libro Diario
+          </li>
+          <li
+            className="btn btn-ghost font-semibold flex flex-row gap-3"
+            onClick={() => navigate("/libromayor")}
+          >
+            <BookMarked className="size-6" />
+            Libro Mayor
           </li>
         </ul>
       </div>

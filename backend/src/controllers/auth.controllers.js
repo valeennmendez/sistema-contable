@@ -22,12 +22,10 @@ export const loginController = async (req, res) => {
     }
 
     if (usuario.activa === false) {
-      return res
-        .status(404)
-        .json({
-          error:
-            "La cuenta esta desactivada. Por favor, contactate con un administrador",
-        });
+      return res.status(404).json({
+        error:
+          "La cuenta esta desactivada. Por favor, contactate con un administrador",
+      });
     }
 
     await generateToken(usuario.id, res);
@@ -153,6 +151,81 @@ export const desactivarUsuarioController = async (req, res) => {
     return res.status(200).json({ message: "Cuenta desactivada" });
   } catch (error) {
     console.log("Ocurrio un error en desactivarCuenta: ", error);
+    return res.status(500).json({ error: "Error en el servidor" });
+  }
+};
+
+export const modificarUsuarioController = async (req, res) => {
+  const { nombre_completo, email, contrasenia, rol } = req.body;
+  const { id } = req.query;
+
+  try {
+    const datosCuenta = await prisma.usuarios.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    if (!datosCuenta)
+      return res.status(400).json({ error: "No se encontro la cuenta" });
+
+    console.log("Datos cuenta: ", datosCuenta);
+
+    let hashedContrasenia;
+
+    if (contrasenia) {
+      const salt = await bcrypt.genSalt(10);
+      hashedContrasenia = await bcrypt.hash(contrasenia, salt);
+    }
+
+    const modificarDatos = await prisma.usuarios.update({
+      where: { id: parseInt(id) },
+      data: {
+        nombre_completo: nombre_completo || datosCuenta.nombre_completo,
+        email: email || datosCuenta.email,
+        contrasenia: hashedContrasenia || datosCuenta.contrasenia,
+        rol: rol || datosCuenta.rol,
+      },
+    });
+
+    if (!modificarDatos)
+      return res.status(400).json({ error: "Error al modificar usuario." });
+
+    return res.status(200).json({
+      datosAntiguos: {
+        id: datosCuenta.id,
+        nombre_completo: datosCuenta.nombre_completo,
+        email: datosCuenta.email,
+        rol: datosCuenta.rol,
+      },
+      message: "Usuario modificado",
+    });
+  } catch (error) {
+    console.log("Ocurrio un error en modificarUsuarioController: ", error);
+    return res.status(500).json({ error: "Error en el servidor." });
+  }
+};
+
+export const obtenerUsuarioController = async (req, res) => {
+  const { id } = req.query;
+
+  try {
+    if (!id) return res.status(400).json({ error: "Es necesario el id" });
+
+    const usuario = await prisma.usuarios.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    if (!usuario)
+      return res.status(400).json({ error: "El usuarion no existe" });
+
+    return res.status(200).json({
+      datosUsuario: {
+        nombre_completo: usuario.nombre_completo,
+        email: usuario.email,
+        rol: usuario.rol,
+      },
+    });
+  } catch (error) {
+    console.log("Error en obtenerUsuarioController: ", error);
     return res.status(500).json({ error: "Error en el servidor" });
   }
 };

@@ -13,6 +13,4 @@ export const generateToken = async (id, res) => {
     sameSite: "strict",
     secure: process.env.NODE_ENV === "production",
   });
-
-  console.log("TOKEN: ", token);
 };
