@@ -1,11 +1,11 @@
 import express from "express";
 import {
   crearCuentaController,
-  //modificarCuentaController,
   obtenerCuentasController,
   desactivarCuenta,
   eliminarCuentaController,
   obtenerCodigoController,
+  obtenerSaldosCuentas,
 } from "../controllers/cuentas.controllers.js";
 
 const router = express.Router();
@@ -16,5 +16,6 @@ router.get("/cuentas", obtenerCuentasController);
 router.delete("/eliminar-cuenta", eliminarCuentaController);
 router.get("/obtener-codigo", obtenerCodigoController);
 router.patch("/desactivar-cuenta", desactivarCuenta);
+router.get("/estadisticas/saldos", obtenerSaldosCuentas);
 
 export default router;

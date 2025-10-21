@@ -221,6 +221,37 @@ export const desactivarCuenta = async (req, res) => {
   }
 };
 
-/*AGREGAR FUNCIONALIDADES A LOS BOTONES Y LISTO 
-EN EL FRONT AGREGAR EL MIDDLEWARE
-*/
+export const obtenerSaldosCuentas = async (req, res) => {
+  try {
+    const cuentasAIncluir = [
+      "Caja",
+      "Banco Santander Rio",
+      "Banco Cuenta Corriente",
+      "Banco Plazo Fijo",
+    ];
+
+    const cuentas = await prisma.cuenta.findMany({
+      where: {
+        imputable: true,
+        nombre: { in: cuentasAIncluir },
+      },
+      select: {
+        nombre: true,
+        saldo: true,
+      },
+    });
+
+    if (!cuentas.length)
+      return res.status(404).json({ error: "No se encontraron cuentas" });
+
+    const data = cuentas.map((c) => ({
+      label: c.nombre,
+      data: Number(c.saldo),
+    }));
+
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log("Ocurrio un error en obtenerSaldoCuentas: ", error);
+    return res.status(500).json({ error: "Error en el servidor" });
+  }
+};
